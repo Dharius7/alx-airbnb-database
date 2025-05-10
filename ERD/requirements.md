@@ -1,76 +1,53 @@
-1. Entities and Their Attributes
+## Entities and Attributes
 
-   
-User
+### User
+- `user_id`: UUID, Primary Key
+- `first_name`: VARCHAR, NOT NULL
+- `last_name`: VARCHAR, NOT NULL
+- `email`: VARCHAR, UNIQUE, NOT NULL
+- `password_hash`: VARCHAR, NOT NULL
+- `phone_number`: VARCHAR, NULL
+- `role`: ENUM (guest, host, admin), NOT NULL
+- `created_at`: TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
 
-user_id: Primary Key, UUID, Indexed
+### Property
+- `property_id`: UUID, Primary Key
+- `host_id`: Foreign Key → User(user_id)
+- `name`: VARCHAR, NOT NULL
+- `description`: TEXT, NOT NULL
+- `location`: VARCHAR, NOT NULL
+- `pricepernight`: DECIMAL, NOT NULL
+- `created_at`: TIMESTAMP
+- `updated_at`: TIMESTAMP
 
-first_name: VARCHAR, NOT NULL
-last_name: VARCHAR, NOT NULL
-email: VARCHAR, UNIQUE, NOT NULL
-password_hash: VARCHAR, NOT NULL
-phone_number: VARCHAR, NULL
-role: ENUM (guest, host, admin), NOT NULL
-created_at: TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
+### Booking
+- `booking_id`: UUID, Primary Key
+- `property_id`: Foreign Key → Property(property_id)
+- `user_id`: Foreign Key → User(user_id)
+- `start_date`: DATE
+- `end_date`: DATE
+- `total_price`: DECIMAL
+- `status`: ENUM (pending, confirmed, canceled)
+- `created_at`: TIMESTAMP
 
+### Payment
+- `payment_id`: UUID, Primary Key
+- `booking_id`: Foreign Key → Booking(booking_id)
+- `amount`: DECIMAL
+- `payment_date`: TIMESTAMP
+- `payment_method`: ENUM (credit_card, paypal, stripe)
 
-Property
-property_id: Primary Key, UUID, Indexed
-host_id: Foreign Key, references User(user_id)
-name: VARCHAR, NOT NULL
-description: TEXT, NOT NULL
-location: VARCHAR, NOT NULL
-pricepernight: DECIMAL, NOT NULL
-created_at: TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
-updated_at: TIMESTAMP, ON UPDATE CURRENT_TIMESTAMP
+### Review
+- `review_id`: UUID, Primary Key
+- `property_id`: Foreign Key → Property(property_id)
+- `user_id`: Foreign Key → User(user_id)
+- `rating`: INTEGER (1–5)
+- `comment`: TEXT
+- `created_at`: TIMESTAMP
 
-
-Booking
-booking_id: Primary Key, UUID, Indexed
-property_id: Foreign Key, references Property(property_id)
-user_id: Foreign Key, references User(user_id)
-start_date: DATE, NOT NULL
-end_date: DATE, NOT NULL
-total_price: DECIMAL, NOT NULL
-status: ENUM (pending, confirmed, canceled), NOT NULL
-created_at: TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
-
-
-Payment
-payment_id: Primary Key, UUID, Indexed
-booking_id: Foreign Key, references Booking(booking_id)
-amount: DECIMAL, NOT NULL
-payment_date: TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
-payment_method: ENUM (credit_card, paypal, stripe), NOT NULL
-
-
-Review
-review_id: Primary Key, UUID, Indexed
-property_id: Foreign Key, references Property(property_id)
-user_id: Foreign Key, references User(user_id)
-rating: INTEGER, CHECK: rating >= 1 AND rating <= 5, NOT NULL
-comment: TEXT, NOT NULL
-created_at: TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
-
-
-Message
-message_id: Primary Key, UUID, Indexed
-sender_id: Foreign Key, references User(user_id)
-recipient_id: Foreign Key, references User(user_id)
-message_body: TEXT, NOT NULL
-sent_at: TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
-
-2. Relationships Between Entities
-User ↔ Booking: One-to-Many (One user can make many bookings)
-
-User ↔ Property: One-to-Many (A host user can own many properties)
-
-Property ↔ Booking: One-to-Many (A property can have many bookings)
-
-Booking ↔ Payment: One-to-One (Each booking has one payment)
-
-User ↔ Review: One-to-Many (One user can write many reviews)
-
-Property ↔ Review: One-to-Many (One property can have many reviews)
-
-User ↔ Message: One-to-Many (A user can send and receive many messages)
+### Message
+- `message_id`: UUID, Primary Key
+- `sender_id`: Foreign Key → User(user_id)
+- `recipient_id`: Foreign Key → User(user_id)
+- `message_body`: TEXT
+- `sent_at`: TIMESTAMP
