@@ -1,24 +1,22 @@
-## Performance Monitoring
+# Performance Monitoring and Optimization Report
 
-### Monitored Queries:
+## Objective
+To monitor query performance using SQL tools such as `EXPLAIN ANALYZE` and `SHOW PROFILE`, identify slow operations, and apply schema or index optimizations to enhance database performance.
 
-1. SELECT * FROM bookings WHERE user_id = 10;
+---
 
-- Before Index: Full scan, ~600ms
-- After Index: Index scan, ~40ms
+## Tools Used
+- `EXPLAIN ANALYZE` – to visualize and understand query execution plans.
+- `SHOW PROFILE` – to measure resource usage (if using MySQL).
 
-2. SELECT * FROM reviews WHERE property_id = 7;
+---
 
-- Before Index: Full scan, ~350ms
-- After Index: Index scan, ~30ms
+## Query 1: Fetch Bookings for a User with Property Details
 
-### Bottlenecks Identified:
-- Missing indexes on foreign keys.
-- Repeated subqueries.
+### Original Query
+```sql
+SELECT b.*, p.title
+FROM bookings b
+JOIN properties p ON b.property_id = p.id
+WHERE b.user_id = 5;
 
-### Changes Applied:
-- Added indexes on all foreign keys and filter columns.
-- Rewrote subqueries with joins where applicable.
-
-### Result:
-Average query response time improved by over 80%.
