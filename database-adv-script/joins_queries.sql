@@ -1,14 +1,18 @@
--- 1. INNER JOIN: Bookings with users
-SELECT bookings.*, users.*
-FROM bookings
-INNER JOIN users ON bookings.user_id = users.id;
+-- INNER JOIN: Bookings and users, ordered by booking id
+SELECT b.*, u.*
+FROM bookings b
+INNER JOIN users u ON b.user_id = u.id
+ORDER BY b.id;
 
--- 2. LEFT JOIN: Properties with their reviews (include properties with no reviews)
-SELECT properties.*, reviews.*
-FROM properties
-LEFT JOIN reviews ON properties.id = reviews.property_id;
+-- LEFT JOIN: Properties and reviews (include properties with no reviews), ordered by property id
+SELECT p.*, r.*
+FROM properties p
+LEFT JOIN reviews r ON p.id = r.property_id
+ORDER BY p.id;
 
--- 3. FULL OUTER JOIN: All users and all bookings (even unmatched)
-SELECT users.*, bookings.*
-FROM users
-FULL OUTER JOIN bookings ON users.id = bookings.user_id;
+-- FULL OUTER JOIN: Users and bookings, ordered by user id and booking id
+SELECT u.*, b.*
+FROM users u
+FULL OUTER JOIN bookings b ON u.id = b.user_id
+ORDER BY u.id NULLS LAST, b.id NULLS LAST;
+
